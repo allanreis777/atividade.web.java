@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protótipo - Sistema CRUD com Spring</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f7fb; margin: 0; color: #333; }
+        .container { max-width: 900px; margin: auto; padding: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 8px; margin-top: 30px; }
+        h1, h2 { text-align: center; color: #2c3e50; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .table th, .table td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        .table th { background: #3498db; color: white; }
+        .button { display: inline-block; background: #3498db; color: white; padding: 8px 14px; border-radius: 5px; text-decoration: none; margin: 4px; }
+        .button:hover { background: #2980b9; }
+        label { display: block; margin: 10px 0 4px; }
+        input, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        @media(max-width:600px){ .container{padding:10px;} }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>💼 Sistema de Produtos</h1>
+    <h2>Tela de Listagem</h2>
+    <table class="table">
+        <tr><th>Nome</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr>
+        <tr><td>Monitor 24"</td><td>999.00</td><td>10</td><td><a href="#" class="button">Visualizar</a><a href="#" class="button">Editar</a></td></tr>
+    </table>
+
+    <h2>Tela de Cadastro / Edição</h2>
+    <form>
+        <label>Nome</label><input type="text" placeholder="Digite o nome">
+        <label>Descrição</label><textarea placeholder="Digite a descrição"></textarea>
+        <label>Preço</label><input type="number" step="0.01">
+        <label>Estoque</label><input type="number">
+        <a href="#" class="button">Salvar</a>
+    </form>
+
+    <h2>Tela de Visualização</h2>
+    <p><strong>Nome:</strong> Monitor 24"</p>
+    <p><strong>Descrição:</strong> Monitor full HD</p>
+    <p><strong>Preço:</strong> R$999,00</p>
+    <p><strong>Estoque:</strong> 10 unidades</p>
+    <a href="#" class="button">Voltar</a>
+</div>
+</body>
+</html>
