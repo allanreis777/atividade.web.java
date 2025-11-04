@@ -1,10 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protótipo - Sistema CRUD com Spring</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f7fb; margin: 0; color: #333; }
+        .container { max-width: 900px; margin: auto; padding: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 8px; margin-top: 30px; }
+        h1, h2 { text-align: center; color: #2c3e50; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .table th, .table td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        .table th { background: #3498db; color: white; }
+        .button { display: inline-block; background: #3498db; color: white; padding: 8px 14px; border-radius: 5px; text-decoration: none; margin: 4px; cursor: pointer; }
+        .button:hover { background: #2980b9; }
+        label { display: block; margin: 10px 0 4px; }
+        input, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        @media(max-width:600px){ .container{padding:10px;} }
+        section { display: none; }
+        section.active { display: block; }
+        .table td[contenteditable="true"] {
+            background: #f8fbff;
+            border: 1px dashed transparent;
+        }
+        .table td[contenteditable="true"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>💼 Sistema de Produtos</h1>
 
+    <!-- Tela de Listagem -->
+    <section id="tela-listagem" class="active">
+        <h2>Tela de Listagem</h2>
+        <table class="table">
+            <tr><th>Nome</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr>
+            <tbody id="lista-produtos">
+            <tr>
+                <td>Monitor 24"</td>
+                <td contenteditable="true">999.00</td>
+                <td contenteditable="true">10</td>
+                <td>
+                    <a href="#" class="button btn-visualizar">Visualizar</a>
+                    <a href="#" class="button btn-editar">Editar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="#" class="button btn-novo">Novo Produto</a>
+    </section>
+
+    <!-- Tela de Cadastro / Edição -->
+    <section id="tela-formulario">
+        <h2>Tela de Cadastro / Edição</h2>
+        <form>
+            <label>Nome</label><input type="text" id="nome" placeholder="Digite o nome">
+            <label>Descrição</label><textarea id="descricao" placeholder="Digite a descrição"></textarea>
+            <label>Preço</label><input type="number" id="preco" step="0.01">
+            <label>Estoque</label><input type="number" id="estoque">
+            <a href="#" class="button btn-salvar">Salvar</a>
+            <a href="#" class="button btn-voltar-form">Voltar</a>
+        </form>
+    </section>
+
+    <!-- Tela de Visualização -->
+    <section id="tela-visualizacao">
+        <h2>Tela de Visualização</h2>
+        <p><strong>Nome:</strong> <span id="visNome">Monitor 24"</span></p>
+        <p><strong>Descrição:</strong> <span id="visDescricao">Monitor full HD</span></p>
+        <p><strong>Preço:</strong> R$<span id="visPreco">999,00</span></p>
+        <p><strong>Estoque:</strong> <span id="visEstoque">10</span> unidades</p>
+        <a href="#" class="button btn-voltar-visu">Voltar</a>
+    </section>
+</div>
+
+<script>
+    // --------- Dados iniciais e ajuda visual ----------
+    let produto = {
+        nome: "Monitor 24\"",
+        descricao: "Monitor full HD",
+        preco: 999.00,
+        estoque: 10
+    };
+
+    // Função de navegação entre telas
+    function mostrarTela(id) {
+        document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+    }
+
+    // Atualiza visualização
+    function atualizarVisualizacao() {
+        document.getElementById("visNome").textContent = produto.nome;
+        document.getElementById("visDescricao").textContent = produto.descricao;
+        document.getElementById("visPreco").textContent = produto.preco.toFixed(2);
+        document.getElementById("visEstoque").textContent = produto.estoque;
+    }
+
+    // Atualiza linha na tabela
+    function atualizarTabela() {
+        const linha = document.querySelector("#lista-produtos tr");
+        linha.cells[0].textContent = produto.nome;
+        linha.cells[1].textContent = produto.preco.toFixed(2);
+        linha.cells[2].textContent = produto.estoque;
+    }
+
+    // Eventos dos botões principais
+    document.querySelector(".btn-visualizar").onclick = e => {
+        e.preventDefault();
+        atualizarVisualizacao();
+        mostrarTela("tela-visualizacao");
+    };
+
+    document.querySelector(".btn-editar").onclick = e => {
+        e.preventDefault();
+        document.getElementById("nome").value = produto.nome;
+        document.getElementById("descricao").value = produto.descricao;
+        document.getElementById("preco").value = produto.preco;
+        document.getElementById("estoque").value = produto.estoque;
+        mostrarTela("tela-formulario");
+    };
+
+    document.querySelector(".btn-novo").onclick = e => {
+        e.preventDefault();
+        document.getElementById("nome").value = "";
+        document.getElementById("descricao").value = "";
+        document.getElementById("preco").value = "";
+        document.getElementById("estoque").value = "";
+        mostrarTela("tela-formulario");
+    };
+
+    // Botões dentro do formulário
+    document.querySelector(".btn-salvar").onclick = e => {
+        e.preventDefault();
+        produto.nome = document.getElementById("nome").value || produto.nome;
+        produto.descricao = document.getElementById("descricao").value || produto.descricao;
+        produto.preco = parseFloat(document.getElementById("preco").value) || produto.preco;
+        produto.estoque = parseInt(document.getElementById("estoque").value) || produto.estoque;
+        atualizarTabela();
+        alert("Produto salvo com sucesso!");
+        mostrarTela("tela-listagem");
+    };
+
+    document.querySelector(".btn-voltar-form").onclick = e => {
+        e.preventDefault();
+        mostrarTela("tela-listagem");
+    };
+
+    document.querySelector(".btn-voltar-visu").onclick = e => {
+        e.preventDefault();
+        mostrarTela("tela-listagem");
+    };
+
+    // Permitir editar diretamente preço e estoque na tabela
+    document.querySelectorAll("#lista-produtos td[contenteditable]").forEach(td => {
+        td.addEventListener("blur", () => {
+            const celulas = document.querySelector("#lista-produtos tr").cells;
+            produto.preco = parseFloat(celulas[1].textContent) || produto.preco;
+            produto.estoque = parseInt(celulas[2].textContent) || produto.estoque;
+        });
+    });
+</script>
 </body>
 </html>
